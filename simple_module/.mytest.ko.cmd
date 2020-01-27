@@ -1,0 +1,1 @@
+cmd_/home/zhongming/linux-test/simple_module/mytest.ko := arm-linux-gnueabi-ld -EL -r  -T ./scripts/module-common.lds --build-id  -o /home/zhongming/linux-test/simple_module/mytest.ko /home/zhongming/linux-test/simple_module/mytest.o /home/zhongming/linux-test/simple_module/mytest.mod.o
