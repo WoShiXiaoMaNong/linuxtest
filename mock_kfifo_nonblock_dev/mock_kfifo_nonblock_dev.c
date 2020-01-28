@@ -37,6 +37,11 @@ static int demodrv_release(struct inode *inode, struct file *file)
 static ssize_t demodrv_read(struct file *file, char __user *buf, size_t lbuf, loff_t*ppos)
 {
 	printk("%s enter\n",__func__);
+	if (kfifo_is_empty(&myfifo)){
+		if (file->f_flags & O_NONBLOCK){
+			return -EAGAIN;
+		}
+	}
 	int ret;
 	int actual_read;
 	ret = kfifo_to_user(&myfifo, buf, lbuf, &actual_read);
@@ -50,7 +55,11 @@ static ssize_t demodrv_read(struct file *file, char __user *buf, size_t lbuf, lo
 
 static ssize_t demodrv_write(struct file *file, const char __user *buf, size_t count, loff_t *f_pos)
 {
-	printk("%s, actual_wirted=%d, pos=%d\n",__func__, 4, *f_pos);
+	if (kfifo_is_full(&myfifo)){
+		if (file->f_flags & O_NONBLOCK) {
+			return -EAGAIN;
+		}
+	}
 	int ret;
 	int actual_write;
 

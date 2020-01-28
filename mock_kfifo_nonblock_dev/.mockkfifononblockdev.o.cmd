@@ -1,0 +1,1 @@
+cmd_/home/zhongming/linux-test/mock_kfifo_nonblock_dev/mockkfifononblockdev.o := arm-linux-gnueabi-ld -EL    -r -o /home/zhongming/linux-test/mock_kfifo_nonblock_dev/mockkfifononblockdev.o /home/zhongming/linux-test/mock_kfifo_nonblock_dev/mock_kfifo_nonblock_dev.o 
