@@ -1,0 +1,1 @@
+cmd_/home/zhongming/linux-test/first_module/mytest.o := ld -m elf_x86_64  -z max-page-size=0x200000    -r -o /home/zhongming/linux-test/first_module/mytest.o /home/zhongming/linux-test/first_module/my_test.o

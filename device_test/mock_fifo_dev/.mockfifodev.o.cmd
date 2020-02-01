@@ -1,0 +1,1 @@
+cmd_/home/zhongming/linux-test/mock_fifo_dev/mockfifodev.o := arm-linux-gnueabi-ld -EL    -r -o /home/zhongming/linux-test/mock_fifo_dev/mockfifodev.o /home/zhongming/linux-test/mock_fifo_dev/mock_fifo_dev.o 
