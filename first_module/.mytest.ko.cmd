@@ -1,1 +1,0 @@
-cmd_/home/zhongming/linux-test/first_module/mytest.ko := ld -r -m elf_x86_64  -z max-page-size=0x200000 -T ./scripts/module-common.lds --build-id  -o /home/zhongming/linux-test/first_module/mytest.ko /home/zhongming/linux-test/first_module/mytest.o /home/zhongming/linux-test/first_module/mytest.mod.o ;  true

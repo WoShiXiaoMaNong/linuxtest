@@ -6,7 +6,7 @@
 #include <linux/slab.h>
 #include <linux/device.h>
 #include <linux/kfifo.h>
-
+#include <linux/poll.h>
 
 //static struct kfifo myfifo;
 
@@ -110,12 +110,34 @@ static ssize_t demodrv_write(struct file *file, const char __user *buf, size_t c
 	return acturl_write;
 }
 
+static unsigned int demodrv_poll(struct file *file, poll_table *wait)
+{
+	int mask = 0;
+	struct my_private_date *data = file->private_data;
+	struct my_device *device = data->device;
+	
+	poll_wait(file, &device->read_queue, wait);
+	poll_wait(file, &device->wirte_queue, wait);
+
+	if (!kfifo_is_empty(&device->myfifo)) {
+		mask |= POLLIN | POLLRDNORM;
+	}
+
+	if (!kfifo_is_full(&device->myfifo)) {
+		mask |= POLLOUT | POLLWRNORM;
+	}
+
+	return mask;
+}
+
+
 static const struct file_operations demodrv_fops={
 	.owner = THIS_MODULE,
 	.open = demodrv_open,
 	.release = demodrv_release,
 	.read = demodrv_read,
-	.write = demodrv_write
+	.write = demodrv_write,
+	.poll = demodrv_poll
 };
 
 

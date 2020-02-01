@@ -2,74 +2,60 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdlib.h>
-#define DEMO_DEV_NAME "/dev/my_demo_kfifo_nonblock_dev"
+#include <linux/input.h>
+//#include <sys/poll.h>
+#include <poll.h>
+#define DEMO_DEV_NAME "/dev/my_poll_device"
 
 int main()
 {
-	int fd;
+	struct pollfd fds[2];
 	int ret;
 
-	char testmessage[] = "Test Message for mock device1111111111111111\
-			      1111111111111111111111111111111111111111111111\
-			      333333333333333333333333333333333333333\
-			      333333333333333333333333333333333333\
-			      1111111111111111111111111111111111111111111111\
-			      1111111111111111111111111111111111111111111111\
-			      1111111111111111111111111111111111111111111111\
-			      1111111111111111111111111111111111111111111111\
-			      1111111111111111111111111111111111111111111111\
-			      1111111111111111111111111111111111111111111111\
-			      333333333333333333333333333333333333333\
-			      333333333333333333333333333333333333\
-			      333333333333333333333333333333333333333\
-			      333333333333333333333333333333333333\
-			      333333333333333333333333333333333333333\
-			      333333333333333333333333333333333333\
-			      333333333333333333333333333333333333333\
-			      333333333333333333333333333333333333\
-			      333333333333333333333333333333333333333\
-			      333333333333333333333333333333333333\
-			      333333333333333333333333333333333333333\
-			      333333333333333333333333333333333333\
-			      33333333333333333333333333333333333\
-			      !";
+	char buffer0[64];
+	char buffer1[64];
 
 	printf("test start\n");
 
-	fd = open(DEMO_DEV_NAME, O_RDWR| O_NONBLOCK);
-	if (fd < 0) {
-		printf("open device %s failed\n", DEMO_DEV_NAME);
+	fds[0].fd = open("/dev/my_poll_device0", O_RDWR| O_NONBLOCK);
+	if (fds[0].fd < 0) {
+		printf("open device %s%d failed\n", DEMO_DEV_NAME,0);
 		return -1;
+	}
+	fds[0].events = POLLIN;
+	fds[0].revents = 0;
+
+
+	fds[1].fd = open("/dev/my_poll_device1", O_RDWR| O_NONBLOCK);
+	if (fds[1].fd < 0) {
+		printf("open device %s%d failed\n", DEMO_DEV_NAME,1);
+		return -1;
+	}
+	fds[1].events = POLLIN;
+	fds[1].revents = 0;
+
+	while(1){
+		ret = poll(fds,2, -1);
+		if(ret == -1)
+			return -1;
+
+		if (fds[0].revents & POLLIN) {
+			ret = read(fds[0].fd, buffer0, 64);
+			if (ret < 0) 
+				return -1;
+			printf("%s%d : %s",DEMO_DEV_NAME, 0, buffer0);
+		}
+		if (fds[1].revents & POLLIN) {
+			ret = read(fds[1].fd, buffer0, 64);
+			if (ret < 0) 
+				return -1;
+			printf("%s%d : %s",DEMO_DEV_NAME, 1, buffer0);
+		}
+
+
 	}
 
 
 
-
-	int len = sizeof(testmessage);
-	//try to read message from empty fifo
-	char *read_buf = (char*) malloc(2 *len);
-	ret = read(fd, read_buf,2 * len);
-
-	printf("Try to read from empty fifo. %d bytes\nmessage is %s \n",ret,read_buf);
-
-
-
-	ret = write(fd, testmessage, len);
-	if (ret != len) {
-		printf("Can't wirte on device %d, ret=%d\n", fd, ret);
-		return -1;
-	}
-	
-	
-
-	
-	
-	ret = read(fd, read_buf, 2 * len);
-	close(fd);
-	
-	printf("Readed message size is %d, context is %s\n", ret, read_buf);
-
-	printf("test end\n");
-	
 	return 0;
 }

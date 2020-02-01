@@ -1,0 +1,1 @@
+cmd_/home/zhongming/linux-test/device_test/my_poll_test/mypollmodule.o := arm-linux-gnueabi-ld -EL    -r -o /home/zhongming/linux-test/device_test/my_poll_test/mypollmodule.o /home/zhongming/linux-test/device_test/my_poll_test/my_poll_module.o 

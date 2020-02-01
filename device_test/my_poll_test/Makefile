@@ -16,4 +16,5 @@ clean:
 	rm -f *.ko;
 	rm -f $(test-obj-name)
 cp:	
-	cp $(module-name) $(BASEINCLUDE)/kmodules/
+	cp $(module-name)   $(BASEINCLUDE)/kmodules/
+	cp $(test-obj-name) $(BASEINCLUDE)/kmodules/

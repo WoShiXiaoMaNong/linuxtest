@@ -1,0 +1,1 @@
+cmd_/home/zhongming/linux-test/device_test/my_poll_test/mypollmodule.ko := arm-linux-gnueabi-ld -EL -r  -T ./scripts/module-common.lds --build-id  -o /home/zhongming/linux-test/device_test/my_poll_test/mypollmodule.ko /home/zhongming/linux-test/device_test/my_poll_test/mypollmodule.o /home/zhongming/linux-test/device_test/my_poll_test/mypollmodule.mod.o
